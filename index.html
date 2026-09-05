@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Paul's Pokédex</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <div class="pokedex-outer-shell">
+        <!-- Top Device Header (The Classic Pokédex Lens) -->
+        <div class="pokedex-header">
+            <div class="big-lens">
+                <div class="lens-reflection"></div>
+            </div>
+            <div class="mini-lights">
+                <span class="light red"></span>
+                <span class="light yellow"></span>
+                <span class="light green"></span>
+            </div>
+        </div>
+
+        <h1>Trainer Paul's Pokédex</h1>
+
+        <!-- Main Body Containing Both Screens -->
+        <div class="pokedex-container">
+
+            <!-- Left Screen Section (Monitor & Controls) -->
+            <div class="left-screen-panel">
+                <div class="screen-border">
+                    <div class="screen-indicators">
+                        <span class="indicator-dot"></span>
+                        <span class="indicator-dot"></span>
+                    </div>
+                    <div id="img-container" class="img-container">
+                        <p>SELECT A POKEMON</p>
+                    </div>
+                    <div id="info-container" class="info-container">
+                        <p>No. ---</p>
+                        <h3>?????</h3>
+                        <p>Type: ---</p>
+                    </div>
+                </div>
+
+                <!-- Bottom Left Device Accents (Matching Reference Image) -->
+                <div class="left-bottom-accents">
+                    <div class="black-dot-btn"></div>
+                    <div class="pill-buttons">
+                        <span class="pill red-pill"></span>
+                        <span class="pill blue-pill"></span>
+                    </div>
+                    <div class="green-speaker-screen">
+                        <div class="speaker-line"></div>
+                        <div class="speaker-line"></div>
+                        <div class="speaker-line"></div>
+                    </div>
+                    <div class="d-pad">
+                        <div class="d-pad-middle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Hinge -->
+            <div class="pokedex-hinge">
+                <div class="hinge-bar"></div>
+                <div class="hinge-bar"></div>
+                <div class="hinge-bar"></div>
+            </div>
+
+            <!-- Right Screen & Keypad Section -->
+            <div class="right-screen-panel">
+
+                <!-- Upper Black Data Screen -->
+                <div class="upper-black-screen"></div>
+
+                <!-- Blue Keypad Grid (8 buttons like the reference) -->
+                <div class="keypad-grid">
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                </div>
+
+                <!-- Tiny Indicator Slits & Yellow Button -->
+                <div class="middle-controls-row">
+                    <div class="tiny-slits">
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="yellow-power-btn"></div>
+                </div>
+
+                <!-- White Input Toggle Buttons -->
+                <div class="white-toggle-row">
+                    <div class="white-toggle-btn"></div>
+                    <div class="white-toggle-btn"></div>
+                </div>
+
+                <!-- Search Input & Scan Button Module -->
+                <div class="search-section">
+                    <label for="search-input">Search Database:</label>
+                    <div class="search-input-group">
+                        <input type="text" id="search-input" name="search-input" placeholder="e.g. Pikachu, 25">
+                        <button id="searchButton">Scan</button>
+                    </div>
+                </div>
+
+                <!-- Bottom Dark Display Slits -->
+                <div class="bottom-dark-screens">
+                    <div class="mini-screen-box"></div>
+                    <div class="mini-screen-box"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
