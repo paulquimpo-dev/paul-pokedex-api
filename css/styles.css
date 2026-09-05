@@ -17,7 +17,7 @@ body {
   min-height: 100vh;
   margin: 0;
   font-family: "Rajdhani", sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* --- Main Pokédex Shell --- */
@@ -121,6 +121,7 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
 }
 
 /* --- Left Screen Styling (The Monitor) --- */
@@ -376,6 +377,7 @@ label[for="search-input"] {
 
 #search-input {
   flex: 1;
+  min-width: 0; /* Prevents input overflow on mobile */
   padding: 8px 10px;
   font-size: 0.95rem;
   font-family: "Rajdhani", sans-serif;
@@ -402,6 +404,7 @@ label[for="search-input"] {
   border: 2px solid #1a365d;
   border-radius: 6px;
   cursor: pointer;
+  white-space: nowrap;
   transition: all 0.2s ease;
 }
 
@@ -409,19 +412,20 @@ label[for="search-input"] {
   background-color: #4299e1;
 }
 
-/* --- Right Panel: Enriched & Larger Evolution Path Module --- */
+/* --- Right Panel: Evolution Path Module --- */
 .evolution-section {
   display: flex;
   align-items: center;
   justify-content: space-around;
   background: rgba(0, 0, 0, 0.25);
-  padding: 14px 8px;
+  padding: 14px 6px;
   border-radius: 8px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   margin-bottom: 12px;
   position: relative;
   min-height: 95px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .evolution-section::before {
@@ -432,7 +436,7 @@ label[for="search-input"] {
   background-color: #e60012;
   padding: 0 6px;
   font-family: "Press Start 2P", monospace;
-  font-size: 0.4rem;
+  font-size: 0.35rem;
   color: #f1c40f;
   letter-spacing: 0.5px;
 }
@@ -442,12 +446,14 @@ label[for="search-input"] {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  padding: 6px 8px;
+  padding: 4px 6px;
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 255, 255, 0.25);
   border-radius: 6px;
   transition: all 0.2s ease;
-  min-width: 65px;
+  flex: 1;
+  max-width: 30%;
+  box-sizing: border-box;
 }
 
 .evo-item:hover {
@@ -458,24 +464,30 @@ label[for="search-input"] {
 }
 
 .evo-item img {
-  width: 54px; /* Increased image size */
-  height: 54px; /* Increased image size */
+  width: 48px;
+  height: 48px;
   object-fit: contain;
   image-rendering: pixelated;
   filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.4));
 }
 
 .evo-item span {
-  font-size: 0.55rem;
+  font-size: 0.45rem;
   color: #fff;
   font-family: "Press Start 2P", monospace;
-  margin-top: 6px;
+  margin-top: 4px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
 .evo-arrow {
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   color: #f1c40f;
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 /* --- Secondary Controls Container on Right Panel --- */
@@ -735,24 +747,45 @@ input:checked + .slider:before {
   color: #cbd5e0;
 }
 
+/* --- Mobile Responsive Rules --- */
 @media (max-width: 768px) {
   body {
     overflow-y: auto;
+    padding: 10px;
   }
+
+  .pokedex-outer-shell {
+    width: 100%;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  h1 {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+
   .pokedex-container {
     flex-direction: column;
   }
+
   .pokedex-hinge {
     width: 100%;
-    height: 15px;
+    height: 14px;
     flex-direction: row;
     border-left: none;
     border-right: none;
     border-top: 2px solid #660000;
     border-bottom: 2px solid #660000;
   }
+
   .hinge-bar {
     width: 30%;
     height: 100%;
+  }
+
+  .left-screen-panel,
+  .right-screen-panel {
+    padding: 14px;
   }
 }

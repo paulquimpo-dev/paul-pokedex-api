@@ -49,7 +49,7 @@ const resetDisplay = () => {
         <p>Type: ---</p>
     `;
     if (evolutionSection) {
-        evolutionSection.innerHTML = `<span style="font-size:0.5rem; color:#a0aec0; font-family:'Press Start 2P', monospace; padding:12px; text-align:center; width:100%;">NO EVOLUTION DATA</span>`;
+        evolutionSection.innerHTML = `<span style="font-size:0.45rem; color:#a0aec0; font-family:'Press Start 2P', monospace; padding:10px; text-align:center; width:100%;">NO EVOLUTION DATA</span>`;
     }
     upperBlackScreen.innerHTML = `<p>DATABASE READY...</p>`;
     if (miniScreenBoxes.length >= 2) {
@@ -151,7 +151,7 @@ const getPokeapi = async (searchedPokemon) => {
         let evoHtml = '';
         evoDetails.forEach((evo, index) => {
             evoHtml += `
-                <div class="evo-item" data-name="${evo.name}">
+                <div class="evo-item" data-name="${evo.name}" title="${evo.name}">
                     <img src="${evo.sprite}" alt="${evo.name}">
                     <span>${evo.name}</span>
                 </div>
@@ -193,7 +193,7 @@ const getPokeapi = async (searchedPokemon) => {
             <p>Type: ???</p>
         `;
         if (evolutionSection) {
-            evolutionSection.innerHTML = `<span style="font-size:0.5rem; color:#ff3b30; font-family:'Press Start 2P', monospace; padding:12px; text-align:center; width:100%;">NO DATA AVAILABLE</span>`;
+            evolutionSection.innerHTML = `<span style="font-size:0.45rem; color:#ff3b30; font-family:'Press Start 2P', monospace; padding:10px; text-align:center; width:100%;">NO DATA AVAILABLE</span>`;
         }
         upperBlackScreen.innerHTML = `<p style="color: #ff3b30;">ERROR: 404</p>`;
         if (miniScreenBoxes.length >= 2) {
