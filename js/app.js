@@ -209,7 +209,16 @@ const getPokeapi = async (searchedPokemon) => {
 
 searchButton.addEventListener('click', () => {
     playAudioCue('click');
-    const searchInput = searchInputEl.value.toLowerCase().trim().replaceAll(" ", "-").replaceAll(".", "").replaceAll(':', "");;
+    const searchInput = searchInputEl.value
+        .toLowerCase()
+        .normalize("NFD")                     // Splits accents from letters (e.g., é -> e + ´)
+        .replace(/[\u0300-\u036f]/g, "")      // Removes the detached accents
+        .trim()
+        .replaceAll(" ", "-")
+        .replaceAll(".", "")
+        .replaceAll(":", "")
+        .replaceAll("'", "")                  // Removes straight apostrophes (Farfetch'd)
+        .replaceAll("’", "");                 // Removes curly apostrophes
     if (!searchInput) {
         resetDisplay();
         return;
