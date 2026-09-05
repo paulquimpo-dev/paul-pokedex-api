@@ -434,8 +434,8 @@ label[for="search-input"] {
   position: absolute;
   top: -11px;
   left: 12px;
-  background-color: #e60012;
-  padding: 2px 6px;
+  background-color: transparent; /* Removes unwanted background block */
+  padding: 0 4px;
   font-family: "Press Start 2P", monospace;
   font-size: 0.38rem;
   color: #f1c40f;
@@ -803,8 +803,8 @@ input:checked + .slider:before {
 .bottom-dark-screens {
   display: flex;
   gap: 10px;
+  margin-bottom: 8px; /* Adds clean margin at the bottom */
 }
-
 .mini-screen-box {
   flex: 1;
   background-color: #1a202c;
