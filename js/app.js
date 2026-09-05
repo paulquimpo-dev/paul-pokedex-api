@@ -29,6 +29,13 @@ const playAudioCue = (type) => {
             gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
             osc.start();
             osc.stop(audioCtx.currentTime + 0.15);
+        } else if (type === 'error') {
+            osc.type = 'sawtooth'; // gives a retro arcade/handheld buzz
+            osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
         }
     } catch (e) {
         console.log("AudioContext blocked or unsupported", e);
@@ -185,6 +192,7 @@ const getPokeapi = async (searchedPokemon) => {
         }
 
     } catch (error) {
+        playAudioCue('error');
         console.log(error);
         currentPokemonData = null;
         imgContainer.innerHTML = `<p>Not Found!</p>`;
