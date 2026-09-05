@@ -211,13 +211,13 @@ searchButton.addEventListener('click', () => {
     playAudioCue('click');
     const searchInput = searchInputEl.value
         .toLowerCase()
-        .normalize("NFD")                     // Splits accents from letters (e.g., é -> e + ´)
-        .replace(/[\u0300-\u036f]/g, "")      // Removes the detached accents :)
+        .normalize("NFD")                     // Removes accents (e.g., Flabébé -> Flabebe)
+        .replace(/[\u0300-\u036f]/g, "")
         .trim()
-        .replaceAll(" ", "-")
-        .replaceAll(".", "")
-        .replaceAll(":", "")
-        .replaceAll("'", "")                  // Removes straight apostrophes (Farfetch'd)
+        .replace(/\s+/g, "-")                 // Turns 1 or more spaces into a single hyphen
+        .replaceAll(".", "")                  // Removes dots (e.g., Mr. Mime)
+        .replaceAll(":", "")                  // Removes colons (e.g., Type: Null)
+        .replaceAll("'", "")                  // Removes apostrophes (e.g., Farfetch'd)
         .replaceAll("’", "");                 // Removes curly apostrophes
     if (!searchInput) {
         resetDisplay();
