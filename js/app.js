@@ -212,7 +212,7 @@ searchButton.addEventListener('click', () => {
     const searchInput = searchInputEl.value
         .toLowerCase()
         .normalize("NFD")                     // Splits accents from letters (e.g., é -> e + ´)
-        .replace(/[\u0300-\u036f]/g, "")      // Removes the detached accents
+        .replace(/[\u0300-\u036f]/g, "")      // Removes the detached accents :)
         .trim()
         .replaceAll(" ", "-")
         .replaceAll(".", "")
