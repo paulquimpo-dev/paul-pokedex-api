@@ -128,7 +128,11 @@ const renderPokemonDetails = (data) => {
 };
 
 const getPokeapi = async (searchedPokemon) => {
+
+    console.log(`pokemon: ${searchedPokemon}`);
+
     const POKEAPI = `https://pokeapi.co/api/v2/pokemon/${searchedPokemon}`;
+    console.log(`POKEAPI: ${POKEAPI}`)
     try {
         playAudioCue('scan');
         imgContainer.innerHTML = `<div class="pokeball-loader"></div>`;
@@ -205,7 +209,7 @@ const getPokeapi = async (searchedPokemon) => {
 
 searchButton.addEventListener('click', () => {
     playAudioCue('click');
-    const searchInput = searchInputEl.value.toLowerCase().trim();
+    const searchInput = searchInputEl.value.toLowerCase().trim().replaceAll(" ", "-").replaceAll(".", "").replaceAll(':', "");;
     if (!searchInput) {
         resetDisplay();
         return;
