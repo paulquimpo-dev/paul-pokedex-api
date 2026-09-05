@@ -377,7 +377,7 @@ label[for="search-input"] {
 
 #search-input {
   flex: 1;
-  min-width: 0; /* Prevents input overflow on mobile */
+  min-width: 0;
   padding: 8px 10px;
   font-size: 0.95rem;
   font-family: "Rajdhani", sans-serif;
@@ -418,27 +418,30 @@ label[for="search-input"] {
   align-items: center;
   justify-content: space-around;
   background: rgba(0, 0, 0, 0.25);
-  padding: 14px 6px;
+  padding: 18px 8px 10px 8px;
   border-radius: 8px;
   border: 2px solid rgba(255, 255, 255, 0.2);
+  margin-top: 18px;
   margin-bottom: 12px;
   position: relative;
-  min-height: 95px;
+  min-height: 110px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .evolution-section::before {
   content: "EVOLUTION PATH (CLICK TO SCAN)";
   position: absolute;
-  top: -9px;
+  top: -11px;
   left: 12px;
   background-color: #e60012;
-  padding: 0 6px;
+  padding: 2px 6px;
   font-family: "Press Start 2P", monospace;
-  font-size: 0.35rem;
+  font-size: 0.38rem;
   color: #f1c40f;
   letter-spacing: 0.5px;
+  line-height: 1.4;
+  z-index: 2;
 }
 
 .evo-item {
@@ -446,13 +449,13 @@ label[for="search-input"] {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  padding: 4px 6px;
+  padding: 6px;
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 255, 255, 0.25);
   border-radius: 6px;
   transition: all 0.2s ease;
   flex: 1;
-  max-width: 30%;
+  max-width: 32%;
   box-sizing: border-box;
 }
 
@@ -464,18 +467,19 @@ label[for="search-input"] {
 }
 
 .evo-item img {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
   image-rendering: pixelated;
   filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.4));
 }
 
 .evo-item span {
-  font-size: 0.45rem;
+  font-size: 0.48rem;
   color: #fff;
   font-family: "Press Start 2P", monospace;
-  margin-top: 4px;
+  margin-top: 6px;
+  line-height: 1.4;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -484,10 +488,79 @@ label[for="search-input"] {
 }
 
 .evo-arrow {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: #f1c40f;
   font-weight: bold;
   flex-shrink: 0;
+}
+
+/* --- Cleaned & Fixed Trainer Portfolio Card Styling --- */
+.portfolio-trainer-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #1a202c;
+  border: 2px solid #3182ce;
+  border-radius: 8px;
+  padding: 12px 14px;
+  text-decoration: none;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.4),
+    0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.trainer-avatar-icon {
+  width: 36px;
+  height: 36px;
+  background-color: #2a4365;
+  border: 2px solid #63b3ed;
+  border-radius: 50%; /* Makes the avatar container a perfect circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.trainer-avatar-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  border-radius: 50%; /* Ensures the image fits the circular mask */
+}
+
+.trainer-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.trainer-card-title {
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.45rem;
+  color: #f1c40f;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+.trainer-card-subtitle {
+  font-family: "Rajdhani", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #63b3ed;
+}
+
+.portfolio-trainer-card:hover {
+  background-color: #2a4365;
+  border-color: #f1c40f;
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.4),
+    0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* --- Secondary Controls Container on Right Panel --- */
@@ -747,7 +820,6 @@ input:checked + .slider:before {
   color: #cbd5e0;
 }
 
-/* --- Mobile Responsive Rules --- */
 @media (max-width: 768px) {
   body {
     overflow-y: auto;

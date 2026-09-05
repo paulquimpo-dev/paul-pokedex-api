@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Trainer Paul's Pokédex</title>
+    <link rel="icon" type="image/png" href="images/profile-pixelart-pokemon.png">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
     <div class="pokedex-outer-shell">
+        <!-- Top Device Header (The Classic Pokédex Lens) -->
         <div class="pokedex-header">
             <div class="big-lens">
                 <div class="lens-reflection"></div>
@@ -24,8 +26,10 @@
 
         <h1>Trainer Paul's Pokédex</h1>
 
+        <!-- Main Body Containing Both Screens -->
         <div class="pokedex-container">
 
+            <!-- Left Screen Section (Monitor & Stats) -->
             <div class="left-screen-panel">
                 <div class="screen-border">
                     <div class="screen-indicators">
@@ -45,6 +49,7 @@
                     </div>
                 </div>
 
+                <!-- Bottom Left Device Accents -->
                 <div class="left-bottom-accents">
                     <div class="black-dot-btn"></div>
                     <div class="pill-buttons">
@@ -62,29 +67,23 @@
                 </div>
             </div>
 
+            <!-- Center Hinge -->
             <div class="pokedex-hinge">
                 <div class="hinge-bar"></div>
                 <div class="hinge-bar"></div>
                 <div class="hinge-bar"></div>
             </div>
 
+            <!-- Right Panel: Prioritized Search & Interactive Controls -->
+            <!-- Right Panel: Corrected Visual Hierarchy -->
             <div class="right-screen-panel">
 
+                <!-- 1. Upper Black Data Status Screen -->
                 <div class="upper-black-screen">
                     <p>DATABASE READY...</p>
                 </div>
 
-                <div class="keypad-grid">
-                    <div class="keypad-btn"></div>
-                    <div class="keypad-btn"></div>
-                    <div class="keypad-btn"></div>
-                    <div class="keypad-btn"></div>
-                    <div class="keypad-btn"></div>
-                    <div class="keypad-btn"></div>
-                    <div class="keypad-btn"></div>
-                    <div class="keypad-btn"></div>
-                </div>
-
+                <!-- 2. PRIMARY FOCUS: Search Section -->
                 <div class="search-section">
                     <label for="search-input">Search Database:</label>
                     <div class="search-input-group">
@@ -93,12 +92,12 @@
                     </div>
                 </div>
 
+                <!-- 3. SECONDARY FOCUS: Evolution Chain Module -->
                 <div class="evolution-section">
                     <span
                         style="font-size:0.5rem; color:#a0aec0; font-family:'Press Start 2P', monospace; padding:12px; text-align:center; width:100%;">NO
                         EVOLUTION DATA</span>
                 </div>
-
                 <div class="secondary-controls-grid">
                     <div class="shiny-toggle-container">
                         <span>Shiny Mode:</span>
@@ -110,10 +109,37 @@
                     <div class="yellow-power-btn" title="System Power"></div>
                 </div>
 
+                <!-- Bottom Dark Display Slits for Height & Weight -->
                 <div class="bottom-dark-screens">
                     <div class="mini-screen-box">HT: ---</div>
                     <div class="mini-screen-box">WT: ---</div>
                 </div>
+                <!-- 4. Trainer Portfolio Card-->
+                <a href="https://paulquimpo-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer"
+                    class="portfolio-trainer-card">
+                    <div class="trainer-avatar-icon">
+                        <img src="images/profile-pixelart-pokemon.png" alt="Trainer Profile">
+                    </div>
+                    <div class="trainer-card-text">
+                        <span class="trainer-card-title">DEVELOPER PROFILE</span>
+                        <span class="trainer-card-subtitle">VIEW TRAINER PORTFOLIO ↗</span>
+                    </div>
+                </a>
+
+
+                <!-- 5. Decorative Keypad Grid & Secondary Controls -->
+                <div class="keypad-grid">
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                    <div class="keypad-btn"></div>
+                </div>
+
+
 
             </div>
 
