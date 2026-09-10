@@ -349,6 +349,89 @@ h1 {
   transition: width 0.6s ease-in-out;
 }
 
+/* --- Retro Audio Player Styles --- */
+.music-player-panel {
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid rgba(241, 196, 15, 0.4);
+  margin-top: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.music-screen-container {
+  display: flex;
+  align-items: center;
+  background-color: #1a202c;
+  padding: 0 8px;
+  border-radius: 4px;
+  border: 2px solid #111;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.music-screen {
+  flex: 1;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.38rem;
+  color: #34c759;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-select {
+  background-color: #f7fafc;
+  color: #2d3748;
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 4px 6px;
+  border: 2px solid #333;
+  border-radius: 6px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.music-controls-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.music-btn {
+  flex: 1;
+  background-color: #3182ce;
+  color: white;
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: 2px solid #1a365d;
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.music-btn:hover {
+  background-color: #4299e1;
+}
+
+.primary-play-btn {
+  background-color: #d69e2e;
+  border-color: #975a16;
+}
+.primary-play-btn:hover {
+  background-color: #ecc94b;
+}
+
 /* --- Right Panel: Search Section --- */
 .search-section {
   background: rgba(0, 0, 0, 0.2);
@@ -413,13 +496,13 @@ label[for="search-input"] {
   background-color: #4299e1;
 }
 
-/* --- Right Panel: Evolution Path Module --- */
+/* --- Right Panel: Evolution Path Carousel Module --- */
 .evolution-section {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   background: rgba(0, 0, 0, 0.25);
-  padding: 18px 8px 10px 8px;
+  padding: 18px 10px 10px 10px;
   border-radius: 8px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   margin-top: 18px;
@@ -427,7 +510,6 @@ label[for="search-input"] {
   position: relative;
   min-height: 110px;
   box-sizing: border-box;
-  overflow: visible;
 }
 
 .evolution-section::before {
@@ -435,7 +517,7 @@ label[for="search-input"] {
   position: absolute;
   top: -11px;
   left: 12px;
-  background-color: transparent; /* Removes unwanted background block */
+  background-color: transparent;
   padding: 0 4px;
   font-family: "Press Start 2P", monospace;
   font-size: 0.38rem;
@@ -445,7 +527,23 @@ label[for="search-input"] {
   z-index: 2;
 }
 
-.evo-item {
+.evo-nav-btn {
+  background-color: #3182ce;
+  color: white;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.6rem;
+  border: 2px solid #1a365d;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.evo-nav-btn:hover {
+  background-color: #4299e1;
+}
+
+.single-evo-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -456,18 +554,18 @@ label[for="search-input"] {
   border-radius: 6px;
   transition: all 0.2s ease;
   flex: 1;
-  max-width: 32%;
+  max-width: 60%;
+  margin: 0 8px;
   box-sizing: border-box;
 }
 
-.evo-item:hover {
+.single-evo-card:hover {
   background: rgba(255, 255, 255, 0.25);
   border-color: #f1c40f;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
 }
 
-.evo-item img {
+.single-evo-card img {
   width: 52px;
   height: 52px;
   object-fit: contain;
@@ -475,7 +573,7 @@ label[for="search-input"] {
   filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.4));
 }
 
-.evo-item span {
+.single-evo-card span {
   font-size: 0.48rem;
   color: #fff;
   font-family: "Press Start 2P", monospace;
@@ -488,14 +586,7 @@ label[for="search-input"] {
   width: 100%;
 }
 
-.evo-arrow {
-  font-size: 1.1rem;
-  color: #f1c40f;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-/* --- Cleaned & Fixed Trainer Portfolio Card Styling --- */
+/* --- Trainer Portfolio Card Styling --- */
 .portfolio-trainer-card {
   display: flex;
   align-items: center;
@@ -518,7 +609,7 @@ label[for="search-input"] {
   height: 36px;
   background-color: #2a4365;
   border: 2px solid #63b3ed;
-  border-radius: 50%; /* Makes the avatar container a perfect circle */
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -530,7 +621,7 @@ label[for="search-input"] {
   height: 100%;
   object-fit: cover;
   image-rendering: pixelated;
-  border-radius: 50%; /* Ensures the image fits the circular mask */
+  border-radius: 50%;
 }
 
 .trainer-card-text {
@@ -804,7 +895,7 @@ input:checked + .slider:before {
 .bottom-dark-screens {
   display: flex;
   gap: 10px;
-  margin-bottom: 8px; /* Adds clean margin at the bottom */
+  margin-bottom: 8px;
 }
 .mini-screen-box {
   flex: 1;

@@ -8,34 +8,241 @@ const shinyToggle = document.getElementById('shinyToggle');
 const evolutionSection = document.querySelector('.evolution-section');
 
 let currentPokemonData = null;
+let currentEvolutionList = [];
+let currentEvolutionIndex = 0;
 
-const playAudioCue = (type) => {
+// Background Audio & Playlist Setup (Wav format for rock-solid timestamp precision)
+const bgMusic = new Audio('https://github.com/paulquimpo-dev/paul-pokedex-api/releases/download/audio/Chill.Relaxing.Pokemon.Music.Mix.wav');
+bgMusic.loop = true;
+bgMusic.volume = 0.2;
+
+const trackSelect = document.getElementById('trackSelect');
+const nowPlayingEl = document.getElementById('now-playing');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const prevTrackBtn = document.getElementById('prevTrackBtn');
+const nextTrackBtn = document.getElementById('nextTrackBtn');
+
+let isMusicPlaying = false;
+
+const startBgMusic = () => {
+    bgMusic.play().then(() => {
+        isMusicPlaying = true;
+        playPauseBtn.textContent = "PAUSE";
+        window.removeEventListener('click', startBgMusic);
+        window.removeEventListener('keydown', startBgMusic);
+        window.removeEventListener('touchstart', startBgMusic);
+    }).catch(err => {
+        console.log("Audio autoplay prevented, waiting for interaction", err);
+    });
+};
+
+window.addEventListener('click', startBgMusic, { once: true });
+window.addEventListener('keydown', startBgMusic, { once: true });
+window.addEventListener('touchstart', startBgMusic, { once: true });
+
+// Function to change track by timestamp seconds
+const playTrackAtIndex = (index) => {
+    if (index < 0) index = trackSelect.options.length - 1;
+    if (index >= trackSelect.options.length) index = 0;
+
+    trackSelect.selectedIndex = index;
+    const selectedOption = trackSelect.options[index];
+    const targetTime = parseFloat(selectedOption.value);
+
+    nowPlayingEl.textContent = `NOW PLAYING: ${selectedOption.text}`;
+
+    bgMusic.pause();
+    bgMusic.currentTime = targetTime;
+
+    const attemptPlay = () => {
+        bgMusic.play().then(() => {
+            isMusicPlaying = true;
+            playPauseBtn.textContent = "PAUSE";
+        }).catch(err => {
+            console.log("Playback error", err);
+        });
+    };
+
+    if (bgMusic.readyState >= 1) {
+        attemptPlay();
+    } else {
+        bgMusic.addEventListener('loadedmetadata', attemptPlay, { once: true });
+    }
+};
+
+// Toggle Play / Pause
+playPauseBtn.addEventListener('click', () => {
+    if (isMusicPlaying) {
+        bgMusic.pause();
+        isMusicPlaying = false;
+        playPauseBtn.textContent = "PLAY";
+    } else {
+        bgMusic.play().then(() => {
+            isMusicPlaying = true;
+            playPauseBtn.textContent = "PAUSE";
+        }).catch(err => console.log("Play error", err));
+    }
+});
+
+// Automatically sync dropdown and display as audio progresses through timestamps naturally
+bgMusic.addEventListener('timeupdate', () => {
+    const currentTime = bgMusic.currentTime;
+    let activeIndex = 0;
+
+    for (let i = 0; i < trackSelect.options.length; i++) {
+        const trackTime = parseFloat(trackSelect.options[i].value);
+        if (currentTime >= trackTime) {
+            activeIndex = i;
+        } else {
+            break;
+        }
+    }
+
+    if (trackSelect.selectedIndex !== activeIndex) {
+        trackSelect.selectedIndex = activeIndex;
+        nowPlayingEl.textContent = `NOW PLAYING: ${trackSelect.options[activeIndex].text}`;
+    }
+});
+
+trackSelect.addEventListener('change', () => {
+    playTrackAtIndex(trackSelect.selectedIndex);
+});
+
+prevTrackBtn.addEventListener('click', () => {
+    playTrackAtIndex(trackSelect.selectedIndex - 1);
+});
+
+nextTrackBtn.addEventListener('click', () => {
+    playTrackAtIndex(trackSelect.selectedIndex + 1);
+});
+
+// --- SINGLE GLOBAL AUDIO CONTEXT (Prevents browser audio blocking limits) ---
+let sharedAudioCtx = null;
+const getAudioContext = () => {
+    if (!sharedAudioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        sharedAudioCtx = new AudioContextClass();
+    }
+    if (sharedAudioCtx.state === 'suspended') {
+        sharedAudioCtx.resume();
+    }
+    return sharedAudioCtx;
+};
+
+let lastBackspaceTime = 0;
+
+// Retro Typing Sound Effect Generator (PC & Mobile Optimized)
+const playTypingSound = (key) => {
     try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (key === 'Backspace') {
+            const nowTime = Date.now();
+            if (nowTime - lastBackspaceTime < 100) return;
+            lastBackspaceTime = nowTime;
+        }
+
+        const audioCtx = getAudioContext();
         const osc = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
         osc.connect(gainNode);
         gainNode.connect(audioCtx.destination);
 
+        const now = audioCtx.currentTime;
+
+        if (key === 'Backspace') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, now);
+            osc.frequency.exponentialRampToValueAtTime(110, now + 0.04);
+            gainNode.gain.setValueAtTime(0.04, now);
+            osc.start(now);
+            osc.stop(now + 0.04);
+        } else if (key === ' ') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(320, now);
+            gainNode.gain.setValueAtTime(0.04, now);
+            osc.start(now);
+            osc.stop(now + 0.03);
+        } else {
+            osc.type = 'sine';
+            const pitchVariation = Math.random() * 60;
+            osc.frequency.setValueAtTime(750 + pitchVariation, now);
+            gainNode.gain.setValueAtTime(0.03, now);
+            osc.start(now);
+            osc.stop(now + 0.025);
+        }
+    } catch (e) {
+        console.log("Typing audio error", e);
+    }
+};
+
+const playAudioCue = (type) => {
+    try {
+        const audioCtx = getAudioContext();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
         if (type === 'click') {
-            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.05);
+            osc.frequency.setValueAtTime(600, now);
+            gainNode.gain.setValueAtTime(0.05, now);
+            osc.start(now);
+            osc.stop(now + 0.05);
         } else if (type === 'scan') {
-            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.15);
-            gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.15);
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.15);
+            gainNode.gain.setValueAtTime(0.08, now);
+            osc.start(now);
+            osc.stop(now + 0.15);
         } else if (type === 'error') {
-            osc.type = 'sawtooth'; // gives a retro arcade/handheld buzz
-            osc.frequency.setValueAtTime(250, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
-            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.2);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(250, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.2);
+            gainNode.gain.setValueAtTime(0.06, now);
+            osc.start(now);
+            osc.stop(now + 0.2);
+        } else if (type === 'fire') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.linearRampToValueAtTime(600, now + 0.1);
+            gainNode.gain.setValueAtTime(0.06, now);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        } else if (type === 'water') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(700, now);
+            osc.frequency.exponentialRampToValueAtTime(300, now + 0.15);
+            gainNode.gain.setValueAtTime(0.06, now);
+            osc.start(now);
+            osc.stop(now + 0.15);
+        } else if (type === 'grass') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.linearRampToValueAtTime(550, now + 0.1);
+            gainNode.gain.setValueAtTime(0.05, now);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        } else if (type === 'electric') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.setValueAtTime(400, now + 0.05);
+            gainNode.gain.setValueAtTime(0.05, now);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        } else if (type === 'psychic') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(900, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
+            gainNode.gain.setValueAtTime(0.04, now);
+            osc.start(now);
+            osc.stop(now + 0.2);
+        } else {
+            osc.frequency.setValueAtTime(500, now);
+            gainNode.gain.setValueAtTime(0.05, now);
+            osc.start(now);
+            osc.stop(now + 0.08);
         }
     } catch (e) {
         console.log("AudioContext blocked or unsupported", e);
@@ -46,6 +253,8 @@ const getTypeClass = (typeName) => `type-${typeName.toLowerCase()}`;
 
 const resetDisplay = () => {
     currentPokemonData = null;
+    currentEvolutionList = [];
+    currentEvolutionIndex = 0;
     imgContainer.innerHTML = `<p>SELECT A POKEMON</p>`;
     infoContainer.innerHTML = `
         <div class="info-header-row">
@@ -93,6 +302,56 @@ const fetchEvolutionDetails = async (chainNames) => {
     return evoData;
 };
 
+const renderEvolutionCarousel = () => {
+    if (!evolutionSection || currentEvolutionList.length === 0) return;
+
+    const currentEvo = currentEvolutionList[currentEvolutionIndex];
+    const hasPrev = currentEvolutionIndex > 0;
+    const hasNext = currentEvolutionIndex < currentEvolutionList.length - 1;
+
+    evolutionSection.innerHTML = `
+        <button class="evo-nav-btn" id="prevEvoBtn" ${!hasPrev ? 'style="opacity: 0.3; pointer-events: none;"' : ''}>◀</button>
+        <div class="evo-item single-evo-card" data-name="${currentEvo.name}" title="${currentEvo.name}">
+            <img src="${currentEvo.sprite}" alt="${currentEvo.name}">
+            <span>${currentEvo.name}</span>
+        </div>
+        <button class="evo-nav-btn" id="nextEvoBtn" ${!hasNext ? 'style="opacity: 0.3; pointer-events: none;"' : ''}>▶</button>
+    `;
+
+    const prevBtn = document.getElementById('prevEvoBtn');
+    const nextBtn = document.getElementById('nextEvoBtn');
+    const cardItem = evolutionSection.querySelector('.evo-item');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentEvolutionIndex > 0) {
+                currentEvolutionIndex--;
+                playAudioCue('click');
+                renderEvolutionCarousel();
+            }
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentEvolutionIndex < currentEvolutionList.length - 1) {
+                currentEvolutionIndex++;
+                playAudioCue('click');
+                renderEvolutionCarousel();
+            }
+        });
+    }
+
+    if (cardItem) {
+        cardItem.addEventListener('click', () => {
+            playAudioCue('click');
+            const pokeName = currentEvo.name.toLowerCase();
+            searchInputEl.value = pokeName;
+            getPokeapi(pokeName);
+        });
+    }
+};
+
 const renderPokemonDetails = (data) => {
     const isShiny = shinyToggle.checked;
     const sprite = isShiny ? data.sprites.front_shiny : data.sprites.front_default;
@@ -135,11 +394,10 @@ const renderPokemonDetails = (data) => {
 };
 
 const getPokeapi = async (searchedPokemon) => {
-
     console.log(`pokemon: ${searchedPokemon}`);
 
     const POKEAPI = `https://pokeapi.co/api/v2/pokemon/${searchedPokemon}`;
-    console.log(`POKEAPI: ${POKEAPI}`)
+    console.log(`POKEAPI: ${POKEAPI}`);
     try {
         playAudioCue('scan');
         imgContainer.innerHTML = `<div class="pokeball-loader"></div>`;
@@ -157,33 +415,18 @@ const getPokeapi = async (searchedPokemon) => {
         const evoChainData = await evoChainRes.json();
 
         const chainNames = parseEvolutionChain(evoChainData.chain);
-        const evoDetails = await fetchEvolutionDetails(chainNames);
+        currentEvolutionList = await fetchEvolutionDetails(chainNames);
 
-        let evoHtml = '';
-        evoDetails.forEach((evo, index) => {
-            evoHtml += `
-                <div class="evo-item" data-name="${evo.name}" title="${evo.name}">
-                    <img src="${evo.sprite}" alt="${evo.name}">
-                    <span>${evo.name}</span>
-                </div>
-            `;
-            if (index < evoDetails.length - 1) {
-                evoHtml += `<span class="evo-arrow">▶</span>`;
-            }
-        });
-        if (evolutionSection) {
-            evolutionSection.innerHTML = evoHtml;
-        }
+        const foundIndex = currentEvolutionList.findIndex(e => e.name.toLowerCase() === data.name.toLowerCase());
+        currentEvolutionIndex = foundIndex !== -1 ? foundIndex : 0;
 
-        document.querySelectorAll('.evo-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const pokeName = item.getAttribute('data-name');
-                searchInputEl.value = pokeName;
-                getPokeapi(pokeName.toLowerCase());
-            });
-        });
-
+        renderEvolutionCarousel();
         renderPokemonDetails(data);
+
+        if (data.types && data.types.length > 0) {
+            const primaryType = data.types[0].type.name;
+            playAudioCue(primaryType);
+        }
 
         if (data.cries && data.cries.latest) {
             const cryAudio = new Audio(data.cries.latest);
@@ -195,6 +438,8 @@ const getPokeapi = async (searchedPokemon) => {
         playAudioCue('error');
         console.log(error);
         currentPokemonData = null;
+        currentEvolutionList = [];
+        currentEvolutionIndex = 0;
         imgContainer.innerHTML = `<p>Not Found!</p>`;
         infoContainer.innerHTML = `
             <div class="info-header-row">
@@ -219,14 +464,14 @@ searchButton.addEventListener('click', () => {
     playAudioCue('click');
     const searchInput = searchInputEl.value
         .toLowerCase()
-        .normalize("NFD")                     // Removes accents (e.g., Flabébé -> Flabebe)
+        .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .trim()
-        .replace(/\s+/g, "-")                 // Turns 1 or more spaces into a single hyphen
-        .replaceAll(".", "")                  // Removes dots (e.g., Mr. Mime)
-        .replaceAll(":", "")                  // Removes colons (e.g., Type: Null)
-        .replaceAll("'", "")                  // Removes apostrophes (e.g., Farfetch'd)
-        .replaceAll("’", "");                 // Removes curly apostrophes
+        .replace(/\s+/g, "-")
+        .replaceAll(".", "")
+        .replaceAll(":", "")
+        .replaceAll("'", "")
+        .replaceAll("’", "");
     if (!searchInput) {
         resetDisplay();
         return;
@@ -234,10 +479,28 @@ searchButton.addEventListener('click', () => {
     getPokeapi(searchInput);
 });
 
-searchInputEl.addEventListener('keypress', (e) => {
+searchInputEl.addEventListener('keydown', (e) => {
+    const ignoredKeys = ['Shift', 'Control', 'Alt', 'Meta', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'CapsLock', 'Escape'];
+    if (ignoredKeys.includes(e.key)) return;
+
     if (e.key === 'Enter') {
         searchButton.click();
+        return;
     }
+
+    playTypingSound(e.key);
+});
+
+let previousInputLength = searchInputEl.value.length;
+searchInputEl.addEventListener('input', (e) => {
+    const currentLength = searchInputEl.value.length;
+    if (currentLength < previousInputLength) {
+        playTypingSound('Backspace');
+    } else if (currentLength > previousInputLength) {
+        const lastChar = searchInputEl.value.slice(-1);
+        playTypingSound(lastChar === ' ' ? ' ' : 'char');
+    }
+    previousInputLength = currentLength;
 });
 
 shinyToggle.addEventListener('change', () => {
